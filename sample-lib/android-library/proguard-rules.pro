@@ -1,10 +1,5 @@
 # Obfuscate all classes in the package io.kotzilla.sample.sdk
 # Keep public classes, methods, and fields that are part of the public API to maintain accessibility.
--keep class org.koin.** { *; }
--keep public class io.kotzilla.sample.sdk.** { public *; }
--repackageclasses io.kotzilla.sample.sdk
--keep class io.kotzilla.sample.sdk.** { *; }
-
 # Keep necessary serialization components for Kotlin serialization
 # Companion objects and serializer methods are required for proper serialization functionality.
 -if @kotlinx.serialization.Serializable class **

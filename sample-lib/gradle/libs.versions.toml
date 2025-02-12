@@ -1,26 +1,15 @@
 [versions]
-binaryValidator = "0.13.2"
-publish = "2.0.0"
-dokka = "1.9.10"
 # Core
 kotlin = "1.9.23"
-koin = "3.5.6"
 coroutines = "1.8.1"
 
 # Android
 agp = "7.4.2"
 
 [libraries]
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-
-# Tools
-kotlinBinary = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryValidator" }
-nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "publish" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

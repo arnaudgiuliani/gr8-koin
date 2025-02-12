@@ -1,5 +1,4 @@
-//import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-//import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.android
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -7,8 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-//    id("com.kezong.fat-aar")
-//    id("com.gradleup.shadow") version "8.3.6"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val androidCompileSDK : String by project
@@ -49,28 +47,19 @@ tasks.withType<KotlinCompile>().all {
     }
 }
 
-// android sources
-val sourcesJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets.map { it.java.srcDirs })
-}
-
 dependencies {
-//    embed(libs.koin.core)
-//    implementation(files("libs/android-library-0.14.0-Beta1-shaded.jar"))
-//    embed("io.kotzilla:android-library-fatjar:1.0")
-    implementation(libs.kotlin.coroutines)
+    implementation(files("libs/android-library-1.0-shaded.jar"))
+//    implementation(libs.kotlin.coroutines)
 }
 
 // Register the shadowJar task using the release runtime classpath.
-//val shadowJarTask = tasks.register<ShadowJar>("shadowJar") {
-//    archiveClassifier.set("shaded") // This will produce "android-library-shaded.jar"
-//    configurations = listOf(project.configurations.getByName("releaseRuntimeClasspath"))
-//
-//    // Relocate Koin to your custom namespace
-//    relocate("org.koin", "io.kotzilla.sdk.koin")
-//
-//    // Exclude duplicate resources
+val shadowJarTask = tasks.register<ShadowJar>("shadowJar") {
+    archiveClassifier.set("shaded") // This will produce "android-library-shaded.jar"
+    configurations = listOf(project.configurations.getByName("releaseRuntimeClasspath"))
+
+    // Relocate Koin to your custom namespace
+//    relocate("kotlinx.coroutines", "io.kotzilla.coroutines")
+    // Exclude duplicate resources
 //    exclude("META-INF/**")
 //    exclude("**/kotlin/**")
-//}
+}

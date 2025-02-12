@@ -1,23 +1,12 @@
 package io.kotzilla.sample.sdk
 
 import android.content.Context
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
+//import io.kotzilla.coroutines.*
+import kotlinx.coroutines.*
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 fun generateId() : String = UUID.randomUUID().toString()
-
-//private class SDKGeneratorFactory {
-//    fun generate() : String = UUID.randomUUID().toString()
-//}
 
 const val SDK_VERSION = "1.0-0.13.7-Beta1"
 
@@ -45,11 +34,6 @@ private object SDKService {
     }
 }
 
-//private val sdkModule = module {
-//    singleOf(::SDKService)
-//    factoryOf(::SDKGeneratorFactory)
-//}
-
 object LibrarySDK : CoroutineScope  {
     const val TAG : String = "[SAMPLE-SDK]"
     private val _supervisorJob = SupervisorJob()
@@ -62,19 +46,6 @@ object LibrarySDK : CoroutineScope  {
     private val _dispatcher = newSingleThreadContext(TAG) // Dispatchers.IO
     override val coroutineContext: CoroutineContext = _supervisorJob + _dispatcher + error
 
-//    private fun createKoinApp(): KoinApplication = koinApplication {
-//        printLogger()
-//        modules(sdkModule)
-//    }
-//
-//    private var _KoinApplication : KoinApplication? = null
-//    private fun getKoin() : Koin = (_KoinApplication ?: error("LibrarySDK Error - Koin not started")).koin
-//    private fun getSdkService() = getKoin().get<SDKService>()
-
-//    private fun setup(context: Context) {
-//        _KoinApplication = createKoinApp()
-//    }
-
     fun start(context: Context, ){
         println("$TAG $SDK_VERSION - start")
 //        setup(context)
@@ -86,9 +57,7 @@ object LibrarySDK : CoroutineScope  {
 
     fun stop(){
         println("$TAG $SDK_VERSION - stop")
-//        getSdkService().stop()
-//        getKoin().close()
-//        _KoinApplication = null
+        SDKService.stop()
     }
 
 }
