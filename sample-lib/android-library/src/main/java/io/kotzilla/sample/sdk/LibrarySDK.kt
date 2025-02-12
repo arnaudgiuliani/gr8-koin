@@ -3,6 +3,8 @@ package io.kotzilla.sample.sdk
 import android.content.Context
 //import io.kotzilla.coroutines.*
 import kotlinx.coroutines.*
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
@@ -14,6 +16,9 @@ private object SDKService {
 
     private var job : Job? = null
     private var running = false
+
+    fun sdkModules() = module {}
+    val koin = koinApplication { modules(sdkModules()) }.koin
 
     fun start(coroutineScope: CoroutineScope) {
         running = true

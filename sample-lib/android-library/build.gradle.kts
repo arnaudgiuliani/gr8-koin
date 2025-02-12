@@ -48,8 +48,9 @@ tasks.withType<KotlinCompile>().all {
 }
 
 dependencies {
-    implementation(files("libs/android-library-1.0-shaded.jar"))
-//    implementation(libs.kotlin.coroutines)
+//    implementation(files("libs/android-library-1.0-shaded.jar"))
+    implementation(libs.kotlin.coroutines)
+    implementation(libs.koin.core)
 }
 
 // Register the shadowJar task using the release runtime classpath.
