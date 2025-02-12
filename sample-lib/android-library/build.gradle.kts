@@ -48,9 +48,9 @@ tasks.withType<KotlinCompile>().all {
 }
 
 dependencies {
-//    implementation(files("libs/android-library-1.0-shaded.jar"))
     implementation(libs.kotlin.coroutines)
-    implementation(libs.koin.core)
+    implementation(files("libs/android-library-1.0-shaded.jar"))
+//    implementation(libs.koin.core)
 }
 
 // Register the shadowJar task using the release runtime classpath.
@@ -59,8 +59,13 @@ val shadowJarTask = tasks.register<ShadowJar>("shadowJar") {
     configurations = listOf(project.configurations.getByName("releaseRuntimeClasspath"))
 
     // Relocate Koin to your custom namespace
-//    relocate("kotlinx.coroutines", "io.kotzilla.coroutines")
+//    relocate("co.touchlab.stately", "io.kotzilla.stately")
+//    relocate("org.koin", "io.kotzilla.koin")
+//    relocate("org.intellij", "io.kotzilla.intellij")
+//    relocate("org.jetbrains", "io.kotzilla.jetbrains")
+
     // Exclude duplicate resources
 //    exclude("META-INF/**")
-//    exclude("**/kotlin/**")
+    exclude("**/kotlinx/**")
+    exclude("**/kotlin/**")
 }

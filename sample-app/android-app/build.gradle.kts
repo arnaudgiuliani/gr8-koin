@@ -43,12 +43,13 @@ android {
 }
 
 dependencies {
+    implementation(files("libs/android-library-debug.aar"))
     implementation(libs.koin4.android)
     implementation(libs.android.fragment)
     implementation(libs.android.appcompat)
 
 //    //Local Binary
-    implementation(libs.sample.library)
+//    implementation(libs.sample.library)
 //    //Dev
 //    implementation(project(":android-library"))
 

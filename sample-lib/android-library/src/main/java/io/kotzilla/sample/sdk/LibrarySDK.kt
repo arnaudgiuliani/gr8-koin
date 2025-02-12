@@ -3,8 +3,8 @@ package io.kotzilla.sample.sdk
 import android.content.Context
 //import io.kotzilla.coroutines.*
 import kotlinx.coroutines.*
-import org.koin.dsl.koinApplication
-import org.koin.dsl.module
+//import io.kotzilla.koin.dsl.*
+import org.koin.dsl.*
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
