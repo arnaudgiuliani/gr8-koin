@@ -1,66 +1,31 @@
 package io.kotzilla.sample.sdk
 
-import android.content.Context
-//import kotlinx.coroutines.*
-import io.kotzilla.koin.dsl.*
-//import org.koin.dsl.*
+import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 import java.util.UUID
-import kotlin.coroutines.CoroutineContext
 
-fun generateId() : String = UUID.randomUUID().toString()
+const val SDK_VERSION = "1.0"
 
-const val SDK_VERSION = "1.0-0.13.7-Beta1"
-
-private object SDKService {
-
-//    private var job : Job? = null
-//    private var running = false
-
-    fun sdkModules() = module {}
-    val koin = koinApplication { modules(sdkModules()) }.koin
-
-//    fun start(coroutineScope: CoroutineScope) {
-//        running = true
-//
-//        job = coroutineScope.launch {
-//            delay(1000L)
-//            while(running){
-//                val id = generateId()
-//                println("Generated: $id")
-//                delay(5000L)
-//            }
-//        }
-//    }
-//
-//    fun stop(){
-//        running = false
-//        job?.cancel()
-//    }
+class IdGenerator(){
+    fun getId() : String = UUID.randomUUID().toString()
 }
 
-object LibrarySDK { //: CoroutineScope  {
+object LibrarySDK {
+
+    private fun sdkModules() = module {
+        factory { IdGenerator() }
+    }
+    private val koin = koinApplication { modules(sdkModules()) }.koin
+    private val idGen by lazy { koin.get<IdGenerator>() }
+
     const val TAG : String = "[SAMPLE-SDK]"
-//    private val _supervisorJob = SupervisorJob()
-//
-//    private val error = CoroutineExceptionHandler { _, exception ->
-//        System.err.println("$TAG Error - $exception")
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
-//    private val _dispatcher = newSingleThreadContext(TAG) // Dispatchers.IO
-//    override val coroutineContext: CoroutineContext = _supervisorJob + _dispatcher + error
 
-    fun start(context: Context, ){
+    fun start(){
         println("$TAG $SDK_VERSION - start")
-//        setup(context)
-
-//        launch {
-//            SDKService.start(this)
-//        }
+        println("$TAG $SDK_VERSION - id: ${idGen.getId()}")
     }
 
     fun stop(){
         println("$TAG $SDK_VERSION - stop")
-//        SDKService.stop()
     }
 }

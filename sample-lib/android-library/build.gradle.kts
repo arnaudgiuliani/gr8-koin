@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.android
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -6,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.gr8") version("0.11.2")
 }
 
 val androidCompileSDK : String by project
@@ -22,8 +21,8 @@ android {
         buildConfig = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     buildTypes {
@@ -43,31 +42,40 @@ android {
 
 tasks.withType<KotlinCompile>().all {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_1_8)
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
+val shadowedDependencies = configurations.create("shadowedDependencies")
+//val compileOnlyDependencies: Configuration = configurations.create("compileOnlyDependencies")
+//compileOnlyDependencies.extendsFrom(configurations.getByName("compileOnly"))
+
 dependencies {
-
 //    implementation(libs.kotlin.coroutines)
-//    implementation(libs.koin.core)
-
-//    shadow(libs.kotlin.coroutines)
-//    implementation(libs.koin.core)
-
-//    implementation(libs.kotlin.coroutines)
-
-//    implementation(libs.koin.core)
-    implementation(files("libs/android-library-1.0-shaded.jar"))
+    add(shadowedDependencies.name, implementation("io.insert-koin:koin-core:3.5.6")!!)
+    testImplementation(kotlin("test"))
 }
 
-// Register the shadowJar task using the release runtime classpath.
-tasks.register<ShadowJar>("shadowJar") {
-    archiveClassifier.set("shaded") // This will produce "android-library-shaded.jar"
-    configurations = listOf(project.configurations.getByName("releaseCompileClasspath"))
+gr8 {
+    create("default") {
+        // program jars are included in the final shadowed jar
+        addProgramJarsFrom(shadowedDependencies)
+        addProgramJarsFrom(tasks.getByName("assemble"))
+        systemClassesToolchain {
+            languageVersion.set(JavaLanguageVersion.of("11"))
+        }
+        // classpath jars are only used by R8 for analysis but are not included in the
+        // final shadowed jar.
+//        addClassPathJarsFrom(compileOnlyDependencies)
+        proguardFile("rules.pro")
 
-    exclude("**/kotlin/**")
-    relocate("org.koin", "io.kotzilla.koin")
+        // Use a version from https://storage.googleapis.com/r8-releases/raw
+        // Requires a maven("https://storage.googleapis.com/r8-releases/raw") repository
+        r8Version("8.8.19")
+        // Or use a commit
+        // The jar is downloaded on demand
+        r8Version("887704078a06fc0090e7772c921a30602bf1a49f")
+        // Or leave it to the default version
+    }
 }
 
-    // Exclude duplicate resources
