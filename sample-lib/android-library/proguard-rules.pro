@@ -1,28 +1,15 @@
-# Obfuscate all classes in the package io.kotzilla.sample.sdk
-# Keep public classes, methods, and fields that are part of the public API to maintain accessibility.
-# Keep necessary serialization components for Kotlin serialization
-# Companion objects and serializer methods are required for proper serialization functionality.
--if @kotlinx.serialization.Serializable class **
--keepclassmembers class <1> {
-    static <1>$Companion Companion;
-}
+-keep class io.kotzilla.sample.sdk.** { *; }
 
-# Keep serializer methods on companion objects of serializable classes
--if @kotlinx.serialization.Serializable class ** {
-    static **$* *;
-}
--keepclassmembers class <2>$<3> {
-    kotlinx.serialization.KSerializer serializer(...);
-}
+# Repackage other classes
+-repackageclasses io.kotzilla.relocated
 
-# Keep INSTANCE and serializer() methods of serializable objects
--if @kotlinx.serialization.Serializable class ** {
-    public static ** INSTANCE;
-}
--keepclassmembers class <1> {
-    public static <1> INSTANCE;
-    kotlinx.serialization.KSerializer serializer(...);
-}
+# Allows more aggressive repackaging
+-allowaccessmodification
 
-# Preserve runtime-visible annotations for polymorphic serialization
--keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+# We need to keep type arguments for Gradle to be able to instantiate abstract models like `Property`
+-keepattributes Signature,Exceptions,*Annotation*,InnerClasses,PermittedSubclasses,EnclosingMethod,Deprecated,SourceFile,LineNumberTable
+
+# Keep kotlin metadata so that the Kotlin compiler knows about top level functions
+-keep class kotlin.Metadata { *; }
+# Keep Unit as it's in the signature of public methods:
+-keep class kotlin.Unit { *; }

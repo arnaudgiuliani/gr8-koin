@@ -1,5 +1,4 @@
-# Keep your public API so that it's callable from scripts
--keep class io.kotzilla.sample.sdk.LibrarySDK.** { *; }
+-keep class io.kotzilla.sample.sdk.** { *; }
 
 # Repackage other classes
 -repackageclasses io.kotzilla.relocated
