@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 val androidCompileSDK : String by project
@@ -48,24 +48,26 @@ tasks.withType<KotlinCompile>().all {
 }
 
 dependencies {
-    implementation(libs.kotlin.coroutines)
-    implementation(files("libs/android-library-1.0-shaded.jar"))
+
+//    implementation(libs.kotlin.coroutines)
 //    implementation(libs.koin.core)
+
+//    shadow(libs.kotlin.coroutines)
+//    implementation(libs.koin.core)
+
+//    implementation(libs.kotlin.coroutines)
+
+//    implementation(libs.koin.core)
+    implementation(files("libs/android-library-1.0-shaded.jar"))
 }
 
 // Register the shadowJar task using the release runtime classpath.
-val shadowJarTask = tasks.register<ShadowJar>("shadowJar") {
+tasks.register<ShadowJar>("shadowJar") {
     archiveClassifier.set("shaded") // This will produce "android-library-shaded.jar"
-    configurations = listOf(project.configurations.getByName("releaseRuntimeClasspath"))
+    configurations = listOf(project.configurations.getByName("releaseCompileClasspath"))
 
-    // Relocate Koin to your custom namespace
-//    relocate("co.touchlab.stately", "io.kotzilla.stately")
-//    relocate("org.koin", "io.kotzilla.koin")
-//    relocate("org.intellij", "io.kotzilla.intellij")
-//    relocate("org.jetbrains", "io.kotzilla.jetbrains")
+    exclude("**/kotlin/**")
+    relocate("org.koin", "io.kotzilla.koin")
+}
 
     // Exclude duplicate resources
-//    exclude("META-INF/**")
-    exclude("**/kotlinx/**")
-    exclude("**/kotlin/**")
-}
