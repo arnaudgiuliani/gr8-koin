@@ -16,6 +16,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(
-    ":android-library",
-)
+include(":android-library",)

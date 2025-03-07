@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    id("com.gradleup.gr8") version("0.11.2")
+    alias(libs.plugins.gr8)
 }
 
 val androidCompileSDK : String by project
@@ -53,7 +53,7 @@ val shadowedDependencies = configurations.create("shadowedDependencies")
 
 dependencies {
 //    implementation(libs.kotlin.coroutines)
-    add(shadowedDependencies.name, implementation("io.insert-koin:koin-core:3.5.6")!!)
+    add(shadowedDependencies.name, "io.insert-koin:koin-core:3.5.6")
     testImplementation(kotlin("test"))
 }
 
@@ -61,7 +61,9 @@ gr8 {
     create("default") {
         // program jars are included in the final shadowed jar
         addProgramJarsFrom(shadowedDependencies)
-        addProgramJarsFrom(tasks.getByName("assemble"))
+        afterEvaluate {
+            addProgramJarsFrom(tasks.getByName("bundleDebugAar"))
+        }
         systemClassesToolchain {
             languageVersion.set(JavaLanguageVersion.of("11"))
         }
@@ -77,6 +79,8 @@ gr8 {
         // The jar is downloaded on demand
         r8Version("887704078a06fc0090e7772c921a30602bf1a49f")
         // Or leave it to the default version
+
+        configurations.getByName("compileOnly").extendsFrom(shadowedDependencies)
     }
 }
 
